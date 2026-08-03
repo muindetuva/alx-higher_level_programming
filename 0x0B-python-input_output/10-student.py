@@ -26,11 +26,7 @@ class Student:
         Args:
             attrs (list): A list of required attributes
         '''
-        new_dict = {}
-        if attrs is not None:
-            for k, v in self.__dict__.items():
-                if k in attrs:
-                    new_dict[k] = v
-            return new_dict
-        else:
-            return self.__dict__
+        if isinstance(attrs, list):
+            return {key: value for key, value in self.__dict__.items()
+                    if key in attrs}
+        return self.__dict__
