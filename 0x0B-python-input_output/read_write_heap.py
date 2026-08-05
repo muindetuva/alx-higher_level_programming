@@ -22,6 +22,9 @@ def replace_heap_string(pid, search_string, replace_string):
     memory_path = "/proc/{}/mem".format(pid)
     search_bytes = search_string.encode("ascii")
     replace_bytes = replace_string.encode("ascii")
+    replacement = replace_bytes + b"\0" * max(
+        0, len(search_bytes) - len(replace_bytes)
+    )
 
     with open(memory_path, "rb+") as memory:
         memory.seek(start)
@@ -30,7 +33,7 @@ def replace_heap_string(pid, search_string, replace_string):
         if offset < 0:
             raise RuntimeError("search string not found in heap")
         memory.seek(start + offset)
-        memory.write(replace_bytes)
+        memory.write(replacement)
 
 
 def main():

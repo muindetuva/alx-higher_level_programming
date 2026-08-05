@@ -22,12 +22,16 @@ def process_line(line, total_size, status_counts):
         return total_size
 
     try:
-        status_code = int(parts[-2])
         file_size = int(parts[-1])
     except (TypeError, ValueError):
         return total_size
 
     total_size += file_size
+    try:
+        status_code = int(parts[-2])
+    except (TypeError, ValueError):
+        return total_size
+
     if status_code in status_counts:
         status_counts[status_code] += 1
     return total_size
@@ -46,6 +50,8 @@ def main():
             if line_count % 10 == 0:
                 print_statistics(total_size, status_counts)
     except KeyboardInterrupt:
+        pass
+    finally:
         print_statistics(total_size, status_counts)
 
 
